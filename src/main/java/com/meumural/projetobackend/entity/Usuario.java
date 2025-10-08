@@ -2,7 +2,6 @@ package com.meumural.projetobackend.entity;
 
 
 import jakarta.persistence.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +35,12 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario")
     private List<Postagem> postagens;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name="usuario_role",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"))
+    private List<Role> roles;
+
 
     // Getters e Setters
 
@@ -46,14 +51,6 @@ public class Usuario {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public String getNome() {
@@ -88,6 +85,14 @@ public class Usuario {
         this.dataCriacao = dataCriacao;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public List<UsuarioGrupo> getUsuarioGrupos() {
         return usuarioGrupos;
     }
@@ -102,5 +107,13 @@ public class Usuario {
 
     public void setPostagens(List<Postagem> postagens) {
         this.postagens = postagens;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

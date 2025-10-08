@@ -3,12 +3,25 @@ package com.meumural.projetobackend.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
 public class UsuarioDTORequest {
     private String nome;
     private String email;
     private String senha;
+    private List<String> rolesList;
 
     // Getters e Setters
+
+
+    public List<String> getRolesList() {
+        return rolesList;
+    }
+
+    public void setRolesList(List<String> rolesList) {
+        this.rolesList = rolesList;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -32,4 +45,6 @@ public class UsuarioDTORequest {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+
 }

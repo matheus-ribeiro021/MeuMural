@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
@@ -24,4 +25,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("UPDATE Usuario u SET u.status = -1 WHERE u.id = :id")
     void apagarUsuario(@Param("id") int usuarioId);
 
+    Optional<Usuario> findByEmail(String email);
 }
