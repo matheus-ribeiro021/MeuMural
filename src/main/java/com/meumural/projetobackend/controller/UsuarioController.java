@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/usuario")
+
 public class UsuarioController {
 
     private final UsuarioService usuarioService;

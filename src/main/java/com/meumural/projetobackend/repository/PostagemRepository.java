@@ -53,4 +53,11 @@ public interface PostagemRepository extends JpaRepository<Postagem, Integer> {
 
     @Query("SELECT p FROM Postagem p WHERE p.id = :postagemId")
     Postagem postagemPorId(@Param("postagemId") Integer postagemId);
+
+    @Query("SELECT p FROM Postagem p WHERE p.usuario.id = :idUsuario")
+    List<Postagem> listarPorUsuario(Integer idUsuario);
+
+    @Query("SELECT p FROM Postagem p WHERE p.grupo.id = :idGrupo")
+    List<Postagem> listarPorGrupo(Integer idGrupo);
+
 }

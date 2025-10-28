@@ -62,10 +62,33 @@ public class PostagemService {
         modelMapper.map(request, postagemBuscada);
         Postagem postagemAtualizada = this.postagemRepository.save(postagemBuscada);
         return modelMapper.map(postagemAtualizada, PostagemDTOResponse.class);
+
+        public List<PostagemDTOResponse> listarPorUsuario(Integer idUsuario) {
+            List<Postagem> postagens = postagemRepository.listarPorUsuario(idUsuario);
+            return postagens.stream()
+                    .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
+                    .collect(Collectors.toList());
+        }
+
+// Listar postagens por grupo
+        public List<PostagemDTOResponse> listarPorGrupo(Integer idGrupo) {
+            List<Postagem> postagens = postagemRepository.listarPorGrupo(idGrupo);
+            return postagens.stream()
+                    .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
+                    .collect(Collectors.toList());
+        }
     }
 
     // Deletar
     public void deletar(int id) {
         this.postagemRepository.apagarPostagem(id);
     }
+
+
+    public List<PostagemDTOResponse> listarPorUsuario(Integer idUsuario) { }
+
+    public List<PostagemDTOResponse> listarPorGrupo(Integer idGrupo) { }
+
+
+
 }
