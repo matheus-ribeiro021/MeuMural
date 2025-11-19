@@ -63,8 +63,7 @@ public class PostagemService {
         Postagem postagemAtualizada = this.postagemRepository.save(postagemBuscada);
         return modelMapper.map(postagemAtualizada, PostagemDTOResponse.class);
 
-        public List<PostagemDTOResponse> listarPorUsuario(Integer Integer idUsuario;
-        idUsuario) {
+        public List<PostagemDTOResponse> listarPorUsuario(Integer idUsuario) {
             List<Postagem> postagens = postagemRepository.listarPorUsuario(idUsuario);
             return postagens.stream()
                     .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
