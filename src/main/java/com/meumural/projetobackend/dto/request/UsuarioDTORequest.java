@@ -1,5 +1,6 @@
 package com.meumural.projetobackend.dto.request;
 
+import com.meumural.projetobackend.entity.RoleName;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -9,17 +10,24 @@ public class UsuarioDTORequest {
     private String nome;
     private String email;
     private String senha;
-    private List<String> rolesList;
+    private Integer status;
+    private RoleName role;
 
-    // Getters e Setters
-
-
-    public List<String> getRolesList() {
-        return rolesList;
+    public RoleName getRole() {
+        return role;
     }
 
-    public void setRolesList(List<String> rolesList) {
-        this.rolesList = rolesList;
+    public void setRole(RoleName role) {
+        this.role = role;
+    }
+// Getters e Setters
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getNome() {

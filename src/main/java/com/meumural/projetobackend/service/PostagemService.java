@@ -22,17 +22,26 @@ import java.util.stream.Collectors;
 public class PostagemService {
     private final PostagemRepository postagemRepository;
     private final ModelMapper modelMapper;
+    // Esses campos precisam ser injetados. Se não estiver usando injeção
+    // via campo (@Autowired), eles devem ser incluídos no construtor.
     private UsuarioRepository usuarioRepository;
     private GrupoRepository grupoRepository;
 
-    public PostagemService(PostagemRepository postagemRepository, ModelMapper modelMapper) {
+    // Construtor completo com todas as dependências
+    public PostagemService(PostagemRepository postagemRepository, ModelMapper modelMapper,
+                           UsuarioRepository usuarioRepository, GrupoRepository grupoRepository) {
         this.postagemRepository = postagemRepository;
         this.modelMapper = modelMapper;
+        this.usuarioRepository = usuarioRepository;
+        this.grupoRepository = grupoRepository;
     }
 
 
     public PostagemDTOResponse salvar(PostagemDTORequest request) {
         Postagem postagem = modelMapper.map(request, Postagem.class);
+        // ATENÇÃO: Os métodos 'retornarUsuarioPorId' e 'retornarGrupoPorId'
+        // não são métodos padrão de Repository. Certifique-se de que eles
+        // estão definidos no seu UsuarioRepository e GrupoRepository.
         postagem.setUsuario(usuarioRepository.retornarUsuarioPorId(request.getUsuarioId()));
         postagem.setGrupo(grupoRepository.retornarGrupoPorId(request.getGrupoId()));
         postagem.setStatus(1);
@@ -42,19 +51,23 @@ public class PostagemService {
 
     // Listar todos
     public List<PostagemDTOResponse> listarTodos() {
+        // ATENÇÃO: 'listarPostagem' não é um método padrão.
         List<Postagem> postagens = this.postagemRepository.listarPostagem();
         List<PostagemDTOResponse> responses = postagens.stream().
                 map(postagem -> modelMapper.map(postagem,PostagemDTOResponse.class)).
                 collect(Collectors.toList());
         return responses;
     }
+
     // Buscar por ID
     public PostagemDTOResponse buscarPorId(int id) {
+        // ATENÇÃO: 'postagemPorId' não é um método padrão.
         return modelMapper.map(this.postagemRepository.postagemPorId(id), PostagemDTOResponse.class);
     }
 
     // Atualizar
     public PostagemDTOResponse atualizar(int id, PostagemDTORequest request) {
+        // ATENÇÃO: 'postagemPorId' não é um método padrão.
         Postagem postagemBuscada = postagemRepository.postagemPorId(id);
         if (postagemBuscada == null){
             throw new IllegalArgumentException("Postagem inexistente");
@@ -62,33 +75,30 @@ public class PostagemService {
         modelMapper.map(request, postagemBuscada);
         Postagem postagemAtualizada = this.postagemRepository.save(postagemBuscada);
         return modelMapper.map(postagemAtualizada, PostagemDTOResponse.class);
+    } // <--- CHAVE DE FECHAMENTO CORRIGIDA AQUI!
 
-        public List<PostagemDTOResponse> listarPorUsuario(Integer idUsuario) {
-            List<Postagem> postagens = postagemRepository.listarPorUsuario(idUsuario);
-            return postagens.stream()
-                    .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
-                    .collect(Collectors.toList());
-        }
+    // Listar postagens por usuário
+    public List<PostagemDTOResponse> listarPorUsuario(Integer idUsuario) {
+        // ATENÇÃO: 'listarPorUsuario' não é um método padrão.
+        List<Postagem> postagens = postagemRepository.listarPorUsuario(idUsuario);
+        return postagens.stream()
+                .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
+                .collect(Collectors.toList());
+    }
 
-// Listar postagens por grupo
-        public List<PostagemDTOResponse> listarPorGrupo(Integer idGrupo) {
-            List<Postagem> postagens = postagemRepository.listarPorGrupo(idGrupo);
-            return postagens.stream()
-                    .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
-                    .collect(Collectors.toList());
-        }
+    // Listar postagens por grupo
+    public List<PostagemDTOResponse> listarPorGrupo(Integer idGrupo) {
+        // ATENÇÃO: 'listarPorGrupo' não é um método padrão.
+        List<Postagem> postagens = postagemRepository.listarPorGrupo(idGrupo);
+        return postagens.stream()
+                .map(postagem -> modelMapper.map(postagem, PostagemDTOResponse.class))
+                .collect(Collectors.toList());
     }
 
     // Deletar
     public void deletar(int id) {
+        // ATENÇÃO: 'apagarPostagem' não é um método padrão.
         this.postagemRepository.apagarPostagem(id);
     }
-
-
-    public List<PostagemDTOResponse> listarPorUsuario(Integer idUsuario) { }
-
-    public List<PostagemDTOResponse> listarPorGrupo(Integer idGrupo) { }
-
-
 
 }

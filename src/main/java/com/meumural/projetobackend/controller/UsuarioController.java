@@ -6,6 +6,8 @@ import com.meumural.projetobackend.dto.request.UsuarioEmailDTORequest;
 import com.meumural.projetobackend.dto.response.UsuarioDTOResponse;
 import com.meumural.projetobackend.dto.response.UsuarioDTOUpdateResponse;
 import com.meumural.projetobackend.dto.response.UsuarioEmailDTOResponse;
+//import com.meumural.projetobackend.dto.roles.LoginUserDTO;
+//import com.meumural.projetobackend.dto.roles.RecoveryJwtTokenDto;
 import com.meumural.projetobackend.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -71,10 +73,10 @@ public class UsuarioController {
 
     }
 
-    @PostMapping("/email")
-    public ResponseEntity<UsuarioEmailDTOResponse> email(@RequestBody UsuarioEmailDTORequest usuarioEmailDTORequest){
-        return ResponseEntity.ok(usuarioService.email(usuarioEmailDTORequest));
-
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<RecoveryJwtTokenDto> authenticateUser (@RequestBody LoginUserDTO loginUserDto){
+//        RecoveryJwtTokenDto token = usuarioService.authenticateUser(loginUserDto);
+//        return new ResponseEntity<>(token, HttpStatus.OK);
+//    }
 
 }

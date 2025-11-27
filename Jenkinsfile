@@ -13,7 +13,7 @@ pipeline {
                     // Atualiza o PATH se necessário
                     env.PATH = "/usr/bin:$PATH"
                     // Instalar as dependências Maven antes de compilar o projeto
-                    bat 'mvn clean install'  // Instala as dependências do Maven
+                    sh 'mvn clean install'  // Instala as dependências do Maven
                 }
             }
         }
@@ -21,11 +21,11 @@ pipeline {
         stage('Construir Imagem Docker') {
             steps {
                 script {
-                    def appName = 'meumural'
+                    def appName = 'MeuMural'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     // Construir a imagem Docker
-                    bat "docker build -t ${imageTag} ."
+                    sh "docker build -t ${imageTag} ."
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Fazer Deploy') {
             steps {
                 script {
-                    def appName = 'meumural'
+                    def appName = 'MeuMural'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     // Parar e remover o container existente, se houver
@@ -41,7 +41,7 @@ pipeline {
             		bat "docker rm -v ${appName} || exit 0"  // Remover o container e os volumes associados
 
                     // Executar o novo container
-                    bat "docker-compose up -d --build"
+                    sh "docker-compose up -d --build"
                 }
             }
         }

@@ -28,7 +28,7 @@ public class ArquivoPostagemService {
     }
 
     public List<ArquivoPostagem> buscarPorPostagem(int postagemId) {
-        return arquivoPostagemRepository.findByPostagemId(postagemId);
+        return arquivoPostagemRepository.listarArquivoPostagemPorPostagemId(postagemId);
     }
 
     public ArquivoPostagem salvar(ArquivoPostagem arquivo, int postagemId) {

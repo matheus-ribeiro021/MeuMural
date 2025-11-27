@@ -6,9 +6,12 @@ import com.meumural.projetobackend.dto.request.UsuarioEmailDTORequest;
 import com.meumural.projetobackend.dto.response.UsuarioDTOResponse;
 import com.meumural.projetobackend.dto.response.UsuarioDTOUpdateResponse;
 import com.meumural.projetobackend.dto.response.UsuarioEmailDTOResponse;
+import com.meumural.projetobackend.dto.roles.LoginUserDTO;
+import com.meumural.projetobackend.dto.roles.RecoveryJwtTokenDto;
 import com.meumural.projetobackend.entity.Role;
 import com.meumural.projetobackend.entity.RoleName;
 import com.meumural.projetobackend.entity.Usuario;
+import com.meumural.projetobackend.repository.RoleRepository;
 import com.meumural.projetobackend.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -20,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,32 +41,50 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final ModelMapper modelMapper;
+    private final RoleRepository roleRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ModelMapper modelMapper, RoleRepository roleRepository) {
         this.usuarioRepository = usuarioRepository;
         this.modelMapper = modelMapper;
+        this.roleRepository = roleRepository;
     }
 
-    @Transactional
     public UsuarioDTOResponse criarUsuario(UsuarioDTORequest usuarioDTORequest) {
-        List<Role> roles = new ArrayList<Role>();
-        Role role = null;
-        for (int i = 0; i < usuarioDTORequest.getRolesList().size(); i++) {
-            role = new Role();
-            role.setName(RoleName.valueOf(usuarioDTORequest.getRolesList().get(i)));
-            roles.add(role);
-        }
+        Role role = new Role();
+        role = roleRepository.findByName(usuarioDTORequest.getRole());
 
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioDTORequest.getNome());
         usuario.setEmail(usuarioDTORequest.getEmail());
         usuario.setSenha(securityConfiguration.passwordEncoder().encode(usuarioDTORequest.getSenha()));
-        usuario.setRoles(List.of(role));
+        usuario.setDataCriacao(LocalDateTime.now());
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        usuario.setStatus(usuario.getStatus());
+        usuario.setRoles(roles);
+
+
         Usuario usuarioSave = this.usuarioRepository.save(usuario);
         UsuarioDTOResponse usuarioDTOResponse = modelMapper.map(usuarioSave, UsuarioDTOResponse.class);
         return usuarioDTOResponse;
     }
 
+
+    public UsuarioDTOResponse salvarUsuario(UsuarioDTORequest usuarioRequest) {
+        Role role = new Role();
+        role= roleRepository.findByName(usuarioRequest.getRole());
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(usuarioRequest.getNome());
+        usuario.setEmail(usuarioRequest.getEmail());
+        usuario.setSenha(securityConfiguration.passwordEncoder().encode(usuarioRequest.getSenha()));
+        usuario.setStatus(1);
+        usuario.setRoles(List.of(role));
+
+        Usuario usuarioSave = this.usuarioRepository.save(usuario);
+
+        return modelMapper.map(usuarioSave, UsuarioDTOResponse.class);
+    }
 //    // Criar usuário
 //    public UsuarioDTOResponse salvar(UsuarioDTORequest request) {
 //       Usuario usuario = modelMapper.map(request, Usuario.class);
@@ -114,18 +136,18 @@ public class UsuarioService {
         this.usuarioRepository.apagarUsuario(id);
     }
 
-    public UsuarioEmailDTOResponse email(UsuarioEmailDTORequest usuarioEmailDTORequest) {
+    public RecoveryJwtTokenDto authenticateUser(LoginUserDTO loginUserDto) {
+        // Cria um objeto de autenticação com o email e a senha do usuário
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(usuarioEmailDTORequest.getEmail(), usuarioEmailDTORequest.getSenha());
+                new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
 
+        // Autentica o usuário com as credenciais fornecidas
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
+        // Obtém o objeto UserDetails do usuário autenticado
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        UsuarioEmailDTOResponse usuarioEmailDTOResponse = new UsuarioEmailDTOResponse();
-        usuarioEmailDTOResponse.setId(userDetails.getIdUsuario());
-        usuarioEmailDTOResponse.setNome(userDetails.getNomeUsuario());
-        usuarioEmailDTOResponse.setToken(jwtTokenService.generateToken(userDetails));
-        return usuarioEmailDTOResponse;
+        // Gera um token JWT para o usuário autenticado
+        return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
     }
 }
