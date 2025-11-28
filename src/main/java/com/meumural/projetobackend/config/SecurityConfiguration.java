@@ -53,7 +53,11 @@ public class SecurityConfiguration {
             "/api/arquivoPostagem/atualizar",
             "/api/arquivoPostagem/buscar",
 
+            "/api/usuarioGrupo/listar",
+            "/api/usuarioGrupo/criar",
+            "/api/usuarioGrupo/deletar",
             "/api/usuarioGrupo/atualizar",
+            "/api/usuarioGrupo/buscar",
 
             "/web/download/app",
             "/h2-console",
