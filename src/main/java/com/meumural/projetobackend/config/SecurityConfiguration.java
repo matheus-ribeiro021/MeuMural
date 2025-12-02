@@ -93,12 +93,15 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
+                        .requestMatchers("/api/**").permitAll() // Permite acesso a todos os endpoints da API para desenvolvimento
+                        .requestMatchers("/swagger-ui/**").permitAll() // Permite acesso ao Swagger UI
+                        .requestMatchers("/v3/api-docs/**").permitAll() // Permite acesso à documentação OpenAPI
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //adicionado para funcionamento do swagger
                         .requestMatchers(ENDPOINTS_USUARIO).hasRole("USUARIO")
                         .requestMatchers(ENDPOINTS_RESPONSAVELEQUIPE).hasRole("RESPONSAVELEQUIPE")
                         .requestMatchers(ENDPOINTS_LIDERCOMITE).hasRole("LIDERCOMITE")
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll() // Permite acesso a todos os outros endpoints para desenvolvimento
                 )
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
