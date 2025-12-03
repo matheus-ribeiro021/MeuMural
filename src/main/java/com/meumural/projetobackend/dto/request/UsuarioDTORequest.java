@@ -11,7 +11,7 @@ public class UsuarioDTORequest {
     private String email;
     private String senha;
     private Integer status;
-    private RoleName role;
+    public RoleName role;
 
     public RoleName getRole() {
         return role;
