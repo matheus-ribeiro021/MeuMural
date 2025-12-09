@@ -50,16 +50,16 @@ public class UsuarioService {
     }
 
     public UsuarioDTOResponse criarUsuario(UsuarioDTORequest usuarioDTORequest) {
-        Role role = new Role();
-        role = roleRepository.findByName(usuarioDTORequest.getRole());
+
+        Role roleUsuario = roleRepository.findByName(RoleName.ROLE_USUARIO);
+        List<Role> roles = new ArrayList<>();
+        roles.add(roleUsuario);
 
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioDTORequest.getNome());
         usuario.setEmail(usuarioDTORequest.getEmail());
         usuario.setSenha(securityConfiguration.passwordEncoder().encode(usuarioDTORequest.getSenha()));
         usuario.setDataCriacao(LocalDateTime.now());
-        List<Role> roles = new ArrayList<>();
-        roles.add(role);
         usuario.setStatus(usuario.getStatus());
         usuario.setRoles(roles);
 
@@ -71,15 +71,16 @@ public class UsuarioService {
 
 
     public UsuarioDTOResponse salvarUsuario(UsuarioDTORequest usuarioRequest) {
-        Role role = new Role();
-        role= roleRepository.findByName(usuarioRequest.getRole());
+        Role roleUsuario = roleRepository.findByName(RoleName.ROLE_USUARIO);
+        List<Role> roles = new ArrayList<>();
+        roles.add(roleUsuario);
 
         Usuario usuario = new Usuario();
         usuario.setNome(usuarioRequest.getNome());
         usuario.setEmail(usuarioRequest.getEmail());
         usuario.setSenha(securityConfiguration.passwordEncoder().encode(usuarioRequest.getSenha()));
         usuario.setStatus(1);
-        usuario.setRoles(List.of(role));
+        usuario.setRoles(roles);
 
         Usuario usuarioSave = this.usuarioRepository.save(usuario);
 

@@ -11,17 +11,6 @@ public class UsuarioDTORequest {
     private String email;
     private String senha;
     private Integer status;
-    public RoleName role;
-
-    public RoleName getRole() {
-        return role;
-    }
-
-    public void setRole(RoleName role) {
-        this.role = role;
-    }
-// Getters e Setters
-
     public Integer getStatus() {
         return status;
     }
