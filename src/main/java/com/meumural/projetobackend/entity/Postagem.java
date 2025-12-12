@@ -19,7 +19,7 @@ public class Postagem {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "grupo_id", nullable = false)
+    @JoinColumn(name = "grupo_id")
     private Grupo grupo;
 
     @Column(name = "postagem_titulo", length = 150)

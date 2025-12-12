@@ -4,7 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public class GrupoDTORequest {
 
+    @NotBlank(message = "Nome não pode ser vazio")
     private String nome;
+
     private String descricao;
 
     public String getNome() {
@@ -13,6 +15,7 @@ public class GrupoDTORequest {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public String getDescricao() {
         return descricao;
     }

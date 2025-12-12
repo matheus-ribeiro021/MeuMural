@@ -1,6 +1,6 @@
 package com.meumural.projetobackend.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,32 +12,29 @@ public class Grupo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grupo_id")
-    private Integer id;
+    private int id;
 
-    @Column(name = "grupo_nome", length = 100)
+    @Column(name = "grupo_nome")
     private String nome;
 
-    @Column(name = "grupo_descricao", columnDefinition = "TEXT")
+    @Column(name = "grupo_descricao")
     private String descricao;
 
     @Column(name = "grupo_data_criacao")
     private LocalDateTime dataCriacao;
 
-    @Column(name = "grupo_status")
+    @Column(name = "grupo_data_status")
     private int status;
-    @OneToMany(mappedBy = "grupo")
-    private List<UsuarioGrupo> usuarioGrupo;
 
-    @OneToMany(mappedBy = "grupo")
+    @JsonIgnore
+    @OneToMany(mappedBy = "grupo", fetch = FetchType.LAZY)
     private List<Postagem> postagens;
 
-
-    // Getters e Setters
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -65,12 +62,12 @@ public class Grupo {
         this.dataCriacao = dataCriacao;
     }
 
-    public List<UsuarioGrupo> getUsuarioGrupo() {
-        return usuarioGrupo;
+    public int getStatus() {
+        return status;
     }
 
-    public void setUsuarioGrupo(List<UsuarioGrupo> usuarioGrupo) {
-        this.usuarioGrupo = usuarioGrupo;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public List<Postagem> getPostagens() {
