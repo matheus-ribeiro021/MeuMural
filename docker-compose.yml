@@ -1,5 +1,0 @@
-services:
-  app:
-    build: .
-    ports:
-      - "8416:8416"

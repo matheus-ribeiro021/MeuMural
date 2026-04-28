@@ -8,17 +8,8 @@ public class UsuarioDTOResponse {
     private String nome;
     private String email;
     private LocalDateTime dataCriacao;
-    private Integer status;
+    private int status;
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -49,5 +40,13 @@ public class UsuarioDTOResponse {
 
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

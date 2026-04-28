@@ -1,23 +1,10 @@
 package com.meumural.projetobackend.dto.request;
 
-import com.meumural.projetobackend.entity.RoleName;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
-import java.util.List;
-
 public class UsuarioDTORequest {
+
     private String nome;
     private String email;
     private String senha;
-    private Integer status;
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public String getNome() {
         return nome;
@@ -42,6 +29,4 @@ public class UsuarioDTORequest {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-
 }

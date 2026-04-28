@@ -1,8 +1,6 @@
 package com.meumural.projetobackend.entity;
 
-
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,19 +29,7 @@ public class Usuario {
     private int status;
 
     @OneToMany(mappedBy = "usuario")
-    private List<UsuarioGrupo> usuarioGrupos;
-
-    @OneToMany(mappedBy = "usuario")
     private List<Postagem> postagens;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(name="usuario_role",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id"))
-    private List<Role> roles;
-
-
-    // Getters e Setters
-
 
     public Integer getId() {
         return id;
@@ -93,27 +79,11 @@ public class Usuario {
         this.status = status;
     }
 
-    public List<UsuarioGrupo> getUsuarioGrupos() {
-        return usuarioGrupos;
-    }
-
-    public void setUsuarioGrupos(List<UsuarioGrupo> usuarioGrupos) {
-        this.usuarioGrupos = usuarioGrupos;
-    }
-
     public List<Postagem> getPostagens() {
         return postagens;
     }
 
     public void setPostagens(List<Postagem> postagens) {
         this.postagens = postagens;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 }

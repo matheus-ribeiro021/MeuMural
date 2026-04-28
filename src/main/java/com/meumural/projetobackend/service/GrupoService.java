@@ -4,7 +4,6 @@ import com.meumural.projetobackend.dto.request.GrupoDTORequest;
 import com.meumural.projetobackend.dto.response.GrupoDTOResponse;
 import com.meumural.projetobackend.entity.Grupo;
 import com.meumural.projetobackend.repository.GrupoRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,16 +13,13 @@ import java.util.stream.Collectors;
 @Service
 public class GrupoService {
 
-    private final ModelMapper modelMapper;
     private final GrupoRepository grupoRepository;
 
-    public GrupoService(ModelMapper modelMapper, GrupoRepository grupoRepository) {
-        this.modelMapper = modelMapper;
+    public GrupoService(GrupoRepository grupoRepository) {
         this.grupoRepository = grupoRepository;
     }
 
-    public GrupoDTOResponse salvarGrupo(GrupoDTORequest request){
-
+    public GrupoDTOResponse salvarGrupo(GrupoDTORequest request) {
         Grupo grupo = new Grupo();
         grupo.setNome(request.getNome());
         grupo.setDescricao(request.getDescricao());
@@ -31,38 +27,43 @@ public class GrupoService {
         grupo.setStatus(1);
 
         Grupo grupoSalvo = grupoRepository.save(grupo);
-
-        return modelMapper.map(grupoSalvo, GrupoDTOResponse.class);
+        return toResponse(grupoSalvo);
     }
 
-    public void excluirGrupo(int id){
-        grupoRepository.apagarGrupo(id);
+    public void excluirGrupo(int id) {
+        grupoRepository.deleteById(id);
     }
 
-    public GrupoDTOResponse retornarGrupoPorId(int id){
-        Grupo grupo = grupoRepository.retornarGrupoPorId(id);
-        return modelMapper.map(grupo, GrupoDTOResponse.class);
+    public GrupoDTOResponse retornarGrupoPorId(int id) {
+        Grupo grupo = grupoRepository.findById(id).orElse(null);
+        if (grupo == null) return null;
+        return toResponse(grupo);
     }
 
-    public GrupoDTOResponse atualizarGrupo(int id, GrupoDTORequest request){
-        Grupo grupo = grupoRepository.retornarGrupoPorId(id);
-
-        if (grupo == null){
-            throw new IllegalArgumentException("Grupo não existe");
+    public GrupoDTOResponse atualizarGrupo(int id, GrupoDTORequest request) {
+        Grupo grupo = grupoRepository.findById(id).orElse(null);
+        if (grupo == null) {
+            throw new IllegalArgumentException("Grupo nao existe");
         }
-
         grupo.setNome(request.getNome());
         grupo.setDescricao(request.getDescricao());
-
-        Grupo grupoSalvo = grupoRepository.save(grupo);
-
-        return modelMapper.map(grupoSalvo, GrupoDTOResponse.class);
+        return toResponse(grupoRepository.save(grupo));
     }
 
-    public List<GrupoDTOResponse> retornarGrupos(){
-        return grupoRepository.retornarGrupos()
+    public List<GrupoDTOResponse> retornarGrupos() {
+        return grupoRepository.findAll()
                 .stream()
-                .map(g -> modelMapper.map(g, GrupoDTOResponse.class))
+                .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    private GrupoDTOResponse toResponse(Grupo grupo) {
+        GrupoDTOResponse response = new GrupoDTOResponse();
+        response.setId(grupo.getId());
+        response.setNome(grupo.getNome());
+        response.setDescricao(grupo.getDescricao());
+        response.setDataCriacao(grupo.getDataCriacao());
+        response.setStatus(grupo.getStatus());
+        return response;
     }
 }
