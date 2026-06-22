@@ -1,6 +1,8 @@
 package com.meumural.projetobackend.service;
 
+import com.meumural.projetobackend.dto.request.LoginDTORequest;
 import com.meumural.projetobackend.dto.request.UsuarioDTORequest;
+import com.meumural.projetobackend.dto.response.LoginDTOResponse;
 import com.meumural.projetobackend.dto.response.UsuarioDTOResponse;
 import com.meumural.projetobackend.entity.Usuario;
 import com.meumural.projetobackend.repository.UsuarioRepository;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +56,14 @@ public class UsuarioService {
         usuario.setEmail(request.getEmail());
         usuario.setSenha(request.getSenha());
         return toResponse(usuarioRepository.save(usuario));
+    }
+
+    public LoginDTOResponse login(LoginDTORequest request) {
+        Usuario usuario = usuarioRepository
+                .findByEmailAndSenha(request.getEmail(), request.getSenha())
+                .orElseThrow(() -> new IllegalArgumentException("Email ou senha inválidos"));
+        String token = UUID.randomUUID().toString();
+        return new LoginDTOResponse(token, toResponse(usuario));
     }
 
     public void deletar(Integer id) {
