@@ -1,6 +1,8 @@
 package com.meumural.projetobackend.controller;
 
+import com.meumural.projetobackend.dto.request.LoginDTORequest;
 import com.meumural.projetobackend.dto.request.UsuarioDTORequest;
+import com.meumural.projetobackend.dto.response.LoginDTOResponse;
 import com.meumural.projetobackend.dto.response.UsuarioDTOResponse;
 import com.meumural.projetobackend.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/usuario")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -43,6 +46,15 @@ public class UsuarioController {
             @PathVariable("id") Integer id,
             @Valid @RequestBody UsuarioDTORequest dto) {
         return ResponseEntity.ok(usuarioService.atualizar(id, dto));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginDTOResponse> login(@RequestBody LoginDTORequest dto) {
+        try {
+            return ResponseEntity.ok(usuarioService.login(dto));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @DeleteMapping("/apagar/{id}")
